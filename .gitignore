@@ -1,0 +1,8 @@
+.idea/
+.settings/
+.gradle/
+build/
+out/
+target/
+*.iml
+
