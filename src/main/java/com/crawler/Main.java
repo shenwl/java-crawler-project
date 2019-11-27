@@ -18,29 +18,29 @@ import java.util.List;
 import java.util.Set;
 
 public class Main {
-    public static boolean isSinaNewsLink(String link) {
-        if(link.contains("passport.sina.cn")) {
+    private static boolean isSinaNewsLink(String link) {
+        if (link.contains("passport.sina.cn")) {
             return false;
         }
         return link.contains("news.sina.cn") || "https://sina.cn".equals(link);
     }
 
-    public static ArrayList<Element> getArticleTags(Document doc) {
+    private static ArrayList<Element> getArticleTags(Document doc) {
         return doc.select("article");
     }
 
-    public static ArrayList<String> getLinksFromTags(ArrayList<Element> linkTags) {
+    private static ArrayList<String> getLinksFromDoc(Document doc) {
+        ArrayList<Element> linkTags = doc.select("a");
         ArrayList<String> links = new ArrayList<>();
-        for (Element aTag : linkTags) {
-            String href = aTag.attr("href");
-            if (isSinaNewsLink(href)) {
-                links.add(href);
-            }
-        }
+
+        linkTags.stream().map(linkTag -> linkTag.attr("href"))
+                .filter(Main::isSinaNewsLink)
+                .forEach(links::add);
+
         return links;
     }
 
-    public static void setCrawlerHeader(HttpRequestBase request) {
+    private static void setCrawlerHeader(HttpRequestBase request) {
         request.setHeader(
                 "User-Agent",
                 "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36"
@@ -62,7 +62,7 @@ public class Main {
 
             Document doc = requestAndParseHtml(link);
 
-            linkPool.addAll(getLinksFromTags(doc.select("a")));
+            linkPool.addAll(getLinksFromDoc(doc));
 
             ArrayList<Element> articleTags = getArticleTags(doc);
 
@@ -87,8 +87,8 @@ public class Main {
     }
 
     private static void printTitle(ArrayList<Element> articleTags) {
-        if(!articleTags.isEmpty()) {
-            for(Element articleTag: articleTags) {
+        if (!articleTags.isEmpty()) {
+            for (Element articleTag : articleTags) {
                 String title = articleTags.get(0).child(0).text();
                 System.out.println(title);
             }
