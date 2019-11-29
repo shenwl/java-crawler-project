@@ -54,11 +54,15 @@ public class Main {
         linkPool.add("https://sina.cn");
 
         while (true) {
-            if (linkPool.isEmpty()) break;
+            if (linkPool.isEmpty()) {
+                break;
+            };
 
             String link = linkPool.remove(linkPool.size() - 1);
 
-            if (processedLinks.contains(link) || !isSinaNewsLink(link)) continue;
+            if (processedLinks.contains(link) || !isSinaNewsLink(link)) {
+                continue;
+            };
 
             Document doc = requestAndParseHtml(link);
 
