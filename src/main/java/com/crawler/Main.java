@@ -16,6 +16,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.System.currentTimeMillis;
+
 
 public class Main {
     public static void main(String[] args) throws IOException, SQLException {
@@ -50,16 +52,25 @@ public class Main {
     }
 
     private static void parseNewsFromPageAndStoreInfoDatabase(Connection con, Document doc, String link) throws SQLException {
-//        ArrayList<Element> articles = doc.select("article");
-//
-//        for (Element article : articles) {
-//            News news = getNewsFromArticleEl(article, link);
-//        }
+        ArrayList<Element> articles = doc.select("article");
+
+        if (!articles.isEmpty()) {
+            for (Element article : articles) {
+                News news = getNewsFromArticleEl(article, link);
+                PreparedStatement state = con.prepareStatement("insert into NEWS (URL, TITLE, CONTENT, CREATE_AT, MODIFIED_AT) values (?, ?, ?, ?, ?)");
+                state.setString(1, news.url);
+                state.setString(2, news.title);
+                state.setString(3, news.content);
+                state.setTimestamp(4, new Timestamp(currentTimeMillis()));
+                state.setTimestamp(5, new Timestamp(currentTimeMillis()));
+                state.executeUpdate();
+            }
+        }
     }
 
     private static News getNewsFromArticleEl(Element article, String link) {
         String title = article.select(".art_tit_h1").get(0).text();
-        String content = article.select(".art_tit_h1").get(0).text();
+        String content = article.text();
 
         return News.createNews(link, title, content);
     }
@@ -146,15 +157,6 @@ public class Main {
             HttpEntity entity = res.getEntity();
             String html = EntityUtils.toString(entity);
             return Jsoup.parse(html);
-        }
-    }
-
-    private static void printTitle(ArrayList<Element> articleTags) {
-        if (!articleTags.isEmpty()) {
-            for (Element articleTag : articleTags) {
-                String title = articleTags.get(0).child(0).text();
-                System.out.println(title);
-            }
         }
     }
 }
