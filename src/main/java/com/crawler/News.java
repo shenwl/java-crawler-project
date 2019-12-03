@@ -1,18 +1,34 @@
 package com.crawler;
 
+import java.sql.Timestamp;
+
+import static java.lang.System.currentTimeMillis;
+
 public class News {
     String url;
     String title;
     String content;
+    Timestamp createdAt;
+    Timestamp modifiedAt;
 
     public News(String url, String title, String content) {
         this.url = url;
         this.title = title;
         this.content = content;
+        this.createdAt = new Timestamp(currentTimeMillis());
+        this.modifiedAt = new Timestamp(currentTimeMillis());
     }
 
     public static News createNews(String url, String title, String content) {
         return new News(url, title, content);
+    }
+
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
+
+    public Timestamp getModifiedAt() {
+        return modifiedAt;
     }
 
     public String getUrl() {

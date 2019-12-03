@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.lang.System.currentTimeMillis;
 
@@ -57,12 +58,12 @@ public class Main {
         if (!articles.isEmpty()) {
             for (Element article : articles) {
                 News news = getNewsFromArticleEl(article, link);
-                PreparedStatement state = con.prepareStatement("insert into NEWS (URL, TITLE, CONTENT, CREATE_AT, MODIFIED_AT) values (?, ?, ?, ?, ?)");
-                state.setString(1, news.url);
-                state.setString(2, news.title);
-                state.setString(3, news.content);
-                state.setTimestamp(4, new Timestamp(currentTimeMillis()));
-                state.setTimestamp(5, new Timestamp(currentTimeMillis()));
+                PreparedStatement state = con.prepareStatement("insert into NEWS (URL, TITLE, CONTENT, CREATED_AT, MODIFIED_AT) values (?, ?, ?, ?, ?)");
+                state.setString(1, news.getUrl());
+                state.setString(2, news.getTitle());
+                state.setString(3, news.getContent());
+                state.setTimestamp(4, news.getCreatedAt());
+                state.setTimestamp(5, news.getModifiedAt());
                 state.executeUpdate();
             }
         }
@@ -70,7 +71,9 @@ public class Main {
 
     private static News getNewsFromArticleEl(Element article, String link) {
         String title = article.select(".art_tit_h1").get(0).text();
-        String content = article.text();
+        ArrayList<Element> paragraphs = article.select("p");
+
+        String content = paragraphs.stream().map(Element::text).collect(Collectors.joining("\n"));
 
         return News.createNews(link, title, content);
     }
