@@ -24,31 +24,31 @@ public class Main {
         Connection connection;
         connection = DriverManager.getConnection("jdbc:h2:file:/Users/shenwl/Projects/java-crawler-project/news");
 
-        while (true) {
-            // waiting for process
-            List<String> linkPool = loadUrlsFromDb(connection, "select link from LINKS_TO_BE_PROCESSED");
-            // already processed
+        String link = null;
 
-            if (linkPool.isEmpty()) {
-                break;
-            }
-
-            String link = linkPool.remove(linkPool.size() - 1);
-
+        while ((link = getNextLink(connection)) != null) {
             if (linkHasProcessed(connection, link) || !isSinaNewsLink(link)) {
                 continue;
             }
-
-            // 从待处理link池取出，放入已处理池
-            processLink(connection, link);
 
             Document doc = requestAndParseHtml(link);
 
             parseLinksFromPageAndStoreIntoDatabase(connection, doc);
 
             parseNewsFromPageAndStoreInfoDatabase(connection, doc, link);
+
+            // 从待处理link池取出，放入已处理池
+            processLink(connection, link);
         }
 
+    }
+
+    private static String getNextLink(Connection con) throws SQLException {
+        List<String> linkPool = loadUrlsFromDb(con, "select link from LINKS_TO_BE_PROCESSED limit 1");
+        if (linkPool.isEmpty()) {
+            return null;
+        }
+        return linkPool.get(0);
     }
 
     private static void parseNewsFromPageAndStoreInfoDatabase(Connection con, Document doc, String link) throws SQLException {
@@ -77,9 +77,9 @@ public class Main {
 
     private static void parseLinksFromPageAndStoreIntoDatabase(Connection con, Document doc) throws SQLException {
         List<String> links = getLinksFromDoc(doc);
-        
-        for(String link : links) {
-            insertLinkIntoDataBase(con,"insert into LINKS_TO_BE_PROCESSED (link) values (?)", link);
+
+        for (String link : links) {
+            insertLinkIntoDataBase(con, "insert into LINKS_TO_BE_PROCESSED (link) values (?)", link);
         }
     }
 
@@ -143,7 +143,7 @@ public class Main {
         statement1.setString(1, link);
         statement1.executeUpdate();
 
-        insertLinkIntoDataBase(con,"insert into LINKS_ALREADY_PROCESSED (link) values (?)", link);
+        insertLinkIntoDataBase(con, "insert into LINKS_ALREADY_PROCESSED (link) values (?)", link);
     }
 
     private static Document requestAndParseHtml(String link) throws IOException {
