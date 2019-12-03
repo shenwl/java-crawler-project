@@ -8,10 +8,10 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DataAccess {
+public class JdbcCrawlerDao implements CrawlerDao {
     Connection connection;
 
-    public DataAccess() {
+    public JdbcCrawlerDao() {
         try {
             this.connection = DriverManager.getConnection("jdbc:h2:file:/Users/shenwl/Projects/java-crawler-project/news");
         } catch (SQLException e) {

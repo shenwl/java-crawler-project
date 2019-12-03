@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Crawler {
-    DataAccess dao = new DataAccess();
+    JdbcCrawlerDao dao = new JdbcCrawlerDao();
 
     public static void main(String[] args) {
         try {
