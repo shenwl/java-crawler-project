@@ -34,13 +34,25 @@ public class JdbcCrawlerDao implements CrawlerDao {
         return urls;
     }
 
+    private void deleteLink(String link) {
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("delete from LINKS_TO_BE_PROCESSED where link = ?");
+            preparedStatement.setString(1, link);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("deleteLink failed" + e.getMessage());
+        }
+    }
+
     @Override
-    public String getNextLink() {
+    public String getNextLinkThenDelete() {
         List<String> linkPool = loadUrls("select link from LINKS_TO_BE_PROCESSED limit 1");
         if (linkPool.isEmpty()) {
             return null;
         }
-        return linkPool.get(0);
+        String link = linkPool.get(0);
+        deleteLink(link);
+        return link;
     }
 
     @Override

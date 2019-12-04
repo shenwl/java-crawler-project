@@ -1,7 +1,7 @@
 package com.crawler;
 
 public interface CrawlerDao {
-    String getNextLink();
+    String getNextLinkThenDelete();
 
     void insertLink(String sql, String link);
 

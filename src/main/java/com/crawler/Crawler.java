@@ -30,7 +30,7 @@ public class Crawler {
     public void run() throws IOException {
         String link = null;
 
-        while ((link = dao.getNextLink()) != null) {
+        while ((link = dao.getNextLinkThenDelete()) != null) {
             if (dao.linkHasProcessed(link) || !isSinaNewsLink(link)) {
                 continue;
             }
