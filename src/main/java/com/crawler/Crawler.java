@@ -71,7 +71,7 @@ public class Crawler {
         List<String> links = getLinksFromDoc(doc);
 
         for (String link : links) {
-            dao.insertLink("insert into LINKS_TO_BE_PROCESSED (link) values (?)", link);
+            dao.insertLink(link);
         }
     }
 
