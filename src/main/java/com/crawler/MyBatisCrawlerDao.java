@@ -14,7 +14,7 @@ public class MyBatisCrawlerDao implements CrawlerDao {
 
     public MyBatisCrawlerDao() {
         try {
-            String resource  = "com/resources/db/mybatis/config.xml";
+            String resource  = "resources/db/mybatis/config.xml";
             InputStream inputStream = Resources.getResourceAsStream(resource);
             this.session = new SqlSessionFactoryBuilder().build(inputStream).openSession();
         } catch (IOException e) {
