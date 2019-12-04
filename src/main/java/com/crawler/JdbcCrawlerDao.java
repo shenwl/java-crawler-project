@@ -34,6 +34,7 @@ public class JdbcCrawlerDao implements CrawlerDao {
         return urls;
     }
 
+    @Override
     public String getNextLink() {
         List<String> linkPool = loadUrls("select link from LINKS_TO_BE_PROCESSED limit 1");
         if (linkPool.isEmpty()) {
@@ -42,7 +43,7 @@ public class JdbcCrawlerDao implements CrawlerDao {
         return linkPool.get(0);
     }
 
-
+    @Override
     public void insertLink(String sql, String link) {
         try {
             PreparedStatement state = connection.prepareStatement(sql);
@@ -53,6 +54,7 @@ public class JdbcCrawlerDao implements CrawlerDao {
         }
     }
 
+    @Override
     public boolean linkHasProcessed(String link) {
         boolean processed = false;
 
@@ -71,6 +73,7 @@ public class JdbcCrawlerDao implements CrawlerDao {
         return processed;
     }
 
+    @Override
     public void processLink(String link) {
         try {
             PreparedStatement statement1 = connection.prepareStatement("DELETE FROM LINKS_TO_BE_PROCESSED where link = ?");
@@ -83,6 +86,7 @@ public class JdbcCrawlerDao implements CrawlerDao {
         }
     }
 
+    @Override
     public void insertNews(News news) {
         try {
             PreparedStatement state = connection.prepareStatement("insert into NEWS (URL, TITLE, CONTENT, CREATED_AT, MODIFIED_AT) values (?, ?, ?, ?, ?)");
