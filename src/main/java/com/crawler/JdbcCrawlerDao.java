@@ -87,15 +87,7 @@ public class JdbcCrawlerDao implements CrawlerDao {
 
     @Override
     public void processLink(String link) {
-        try {
-            PreparedStatement statement1 = connection.prepareStatement("DELETE FROM LINKS_TO_BE_PROCESSED where link = ?");
-            statement1.setString(1, link);
-            statement1.executeUpdate();
-
-            insertLink("insert into LINKS_ALREADY_PROCESSED (link) values (?)", link);
-        } catch (SQLException e) {
-            System.err.println("processLink failed" + e.getMessage());
-        }
+        insertLink("insert into LINKS_ALREADY_PROCESSED (link) values (?)", link);
     }
 
     @Override
