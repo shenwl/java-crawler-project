@@ -67,7 +67,7 @@ public class JdbcCrawlerDao implements CrawlerDao {
     }
 
     @Override
-    public boolean linkHasProcessed(String link) {
+    public boolean isLinkAlreadyProcessed(String link) {
         boolean processed = false;
 
         try {

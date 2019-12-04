@@ -31,7 +31,7 @@ public class Crawler {
         String link = null;
 
         while ((link = dao.getNextLinkThenDelete()) != null) {
-            if (dao.linkHasProcessed(link) || !isSinaNewsLink(link)) {
+            if (dao.isLinkAlreadyProcessed(link) || !isSinaNewsLink(link)) {
                 continue;
             }
 

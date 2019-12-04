@@ -3,7 +3,7 @@ package com.crawler;
 public interface CrawlerDao {
     String getNextLinkThenDelete();
 
-    boolean linkHasProcessed(String link);
+    boolean isLinkAlreadyProcessed(String link);
 
     void insertLink(String link);
 
