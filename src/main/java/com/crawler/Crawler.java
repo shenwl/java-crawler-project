@@ -16,33 +16,34 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Crawler {
-    MyBatisCrawlerDao dao = new MyBatisCrawlerDao();
+public class Crawler extends Thread {
+    CrawlerDao dao;
 
-    public static void main(String[] args) {
-        try {
-            new Crawler().run();
-        } catch (IOException e) {
-            System.err.println("爬虫启动失败：" + e.getMessage());
-        }
+    public Crawler(CrawlerDao dao) {
+        this.dao = dao;
     }
 
-    public void run() throws IOException {
-        String link = null;
+    @Override
+    public void run() {
+        try {
+            String link = null;
 
-        while ((link = dao.getNextLinkThenDelete()) != null) {
-            if (dao.isLinkAlreadyProcessed(link) || !isSinaNewsLink(link)) {
-                continue;
+            while ((link = dao.getNextLinkThenDelete()) != null) {
+                if (dao.isLinkAlreadyProcessed(link) || !isSinaNewsLink(link)) {
+                    continue;
+                }
+
+                Document doc = requestAndParseHtml(link);
+
+                parseLinksFromPageAndStoreIntoDatabase(doc);
+
+                parseNewsFromPageAndStoreInfoDatabase(doc, link);
+
+                // 从待处理link池取出，放入已处理池
+                dao.processLink(link);
             }
-
-            Document doc = requestAndParseHtml(link);
-
-            parseLinksFromPageAndStoreIntoDatabase(doc);
-
-            parseNewsFromPageAndStoreInfoDatabase(doc, link);
-
-            // 从待处理link池取出，放入已处理池
-            dao.processLink(link);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
 
     }
