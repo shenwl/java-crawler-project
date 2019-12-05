@@ -4,28 +4,28 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.crawler.MyMapper">
     <select id="selectNextAvailableLink" resultType="String">
-        select link from LINKS_TO_BE_PROCESSED limit 1
+        select link from links_to_be_processed limit 1
     </select>
     <select id="deleteLink" parameterType="String">
-        delete from LINKS_TO_BE_PROCESSED where link = #{link}
+        delete from links_to_be_processed where link = #{link}
     </select>
     <select id="insertLink" parameterType="HashMap">
         insert into
         <choose>
             <when test="isAlreadyProcessed">
-                LINKS_ALREADY_PROCESSED
+                links_already_processed
             </when>
             <otherwise>
-                LINKS_TO_BE_PROCESSED
+                links_to_be_processed
             </otherwise>
         </choose>
         (link) values (#{link})
     </select>
     <select id="countLinkInAlreadyProcessed" parameterType="String" resultType="int">
-        select count(link) from LINKS_ALREADY_PROCESSED where link = #{link}
+        select count(link) from links_already_processed where link = #{link}
     </select>
     <select id="insertNews" parameterType="com.crawler.News">
-        insert into NEWS (URL, TITLE, CONTENT, CREATED_AT, MODIFIED_AT)
+        insert into news (URL, TITLE, CONTENT, CREATED_AT, MODIFIED_AT)
         values (#{url}, #{title}, #{content}, now(), now())
     </select>
 </mapper>
