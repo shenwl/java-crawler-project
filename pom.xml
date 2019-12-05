@@ -33,6 +33,11 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.18</version>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <version>5.4.2</version>
@@ -57,13 +62,15 @@
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>6.1.0</version>
                 <configuration>
-                    <url>jdbc:h2:file:/Users/shenwl/Projects/java-crawler-project/news</url>
+                    <url>jdbc:mysql://localhost:3306/news</url>
+                    <user>root</user>
+                    <password>root</password>
                 </configuration>
                 <dependencies>
                     <dependency>
-                        <groupId>com.h2database</groupId>
-                        <artifactId>h2</artifactId>
-                        <version>1.4.199</version>
+                        <groupId>mysql</groupId>
+                        <artifactId>mysql-connector-java</artifactId>
+                        <version>8.0.18</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -72,7 +79,6 @@
                 <artifactId>spotbugs-maven-plugin</artifactId>
                 <version>3.1.12.2</version>
                 <dependencies>
-                    <!-- overwrite dependency on spotbugs if you want to specify the version of spotbugs -->
                     <dependency>
                         <groupId>com.github.spotbugs</groupId>
                         <artifactId>spotbugs</artifactId>
