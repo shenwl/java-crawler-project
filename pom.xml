@@ -62,7 +62,7 @@
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>6.1.0</version>
                 <configuration>
-                    <url>jdbc:mysql://localhost:3306/news</url>
+                    <url>jdbc:mysql://localhost:3306/news?characterEncoding=utf-8</url>
                     <user>root</user>
                     <password>root</password>
                 </configuration>
