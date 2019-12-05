@@ -84,26 +84,31 @@ public class Crawler extends Thread {
         return link.contains("news.sina.cn") || "https://sina.cn".equals(link);
     }
 
-    private static ArrayList<String> getLinksFromDoc(Document doc) {
+    private String parseLink(String link) {
+        // 去除"\"
+        return link.replaceAll("\\\\", "");
+    }
+
+    private ArrayList<String> getLinksFromDoc(Document doc) {
         ArrayList<Element> linkTags = doc.select("a");
         ArrayList<String> links = new ArrayList<>();
 
         linkTags.stream().map(linkTag -> linkTag.attr("href"))
                 .filter(Crawler::isSinaNewsLink)
+                .map(link -> parseLink(link))
                 .forEach(links::add);
 
         return links;
     }
 
-    private static void setCrawlerHeader(HttpRequestBase request) {
+    private void setCrawlerHeader(HttpRequestBase request) {
         request.setHeader(
                 "User-Agent",
                 "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36"
         );
     }
 
-
-    private static Document requestAndParseHtml(String link) throws IOException {
+    private Document requestAndParseHtml(String link) throws IOException {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(link);
         setCrawlerHeader(httpGet);
