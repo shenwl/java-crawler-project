@@ -25,7 +25,7 @@
         select count(link) from links_already_processed where link = #{link}
     </select>
     <select id="insertNews" parameterType="com.crawler.News">
-        insert into news (URL, TITLE, CONTENT, CREATED_AT, MODIFIED_AT)
+        insert into news (url, title, content, created_at, modified_at)
         values (#{url}, #{title}, #{content}, now(), now())
     </select>
 </mapper>

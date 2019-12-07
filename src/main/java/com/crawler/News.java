@@ -1,42 +1,22 @@
 package com.crawler;
 
-import java.sql.Timestamp;
-
-import static java.lang.System.currentTimeMillis;
+import java.time.Instant;
 
 public class News {
     String url;
     String title;
     String content;
-    Timestamp createdAt;
-    Timestamp modifiedAt;
+    Instant createdAt;
+    Instant modifiedAt;
 
     public News(String url, String title, String content) {
         this.url = url;
         this.title = title;
         this.content = content;
-        this.createdAt = new Timestamp(currentTimeMillis());
-        this.modifiedAt = new Timestamp(currentTimeMillis());
     }
 
     public static News createNews(String url, String title, String content) {
         return new News(url, title, content);
-    }
-
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Timestamp getModifiedAt() {
-        return modifiedAt;
-    }
-
-    public void setModifiedAt(Timestamp modifiedAt) {
-        this.modifiedAt = modifiedAt;
     }
 
     public String getUrl() {
@@ -61,5 +41,21 @@ public class News {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Instant getModifiedAt() {
+        return modifiedAt;
+    }
+
+    public void setModifiedAt(Instant modifiedAt) {
+        this.modifiedAt = modifiedAt;
     }
 }
