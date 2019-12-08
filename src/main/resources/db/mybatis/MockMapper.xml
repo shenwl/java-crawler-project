@@ -5,7 +5,7 @@
 <mapper namespace="com.crawler.MockMapper">
     <select id="selectNews" resultType="com.crawler.News">
         select url, title, content, created_at, modified_at
-        from news
+        from news limit 1000
     </select>
     <select id="insertNews" parameterType="com.crawler.News">
         insert into news (url, title, content, created_at, modified_at)
