@@ -6,6 +6,8 @@ import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.elasticsearch.action.bulk.BulkRequest;
+import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -40,6 +42,7 @@ public class ElasticSearchDataMock {
 
     private static void writeData(List<News> newsList) {
         try (RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(new HttpHost("localhost", 9200, "http")))) {
+            BulkRequest bulkRequest = new BulkRequest();
             for (News news : newsList) {
                 IndexRequest req = new IndexRequest("news");
 
@@ -49,10 +52,10 @@ public class ElasticSearchDataMock {
                 data.put("title", news.getTitle());
 
                 req.source(data, XContentType.JSON);
-
-                IndexResponse res = client.index(req, RequestOptions.DEFAULT);
-                System.out.println(res.status().getStatus());
+                bulkRequest.add(req);
             }
+            BulkResponse res = client.bulk(bulkRequest, RequestOptions.DEFAULT);
+            System.out.println(res.status());
         } catch (IOException e) {
             e.printStackTrace();
         }
