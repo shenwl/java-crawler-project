@@ -57,7 +57,7 @@ public class ElasticSearchDataMock {
             BulkResponse res = client.bulk(bulkRequest, RequestOptions.DEFAULT);
             System.out.println(res.status());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException();
         }
     }
 
