@@ -32,6 +32,13 @@ public class ElasticSearchDataMock {
         }
 
         List<News> newsList = getNewsFromMySQL(sqlSessionFactory);
+
+        for (int i = 0; i < 8; i++) {
+            new Thread(() -> writeData(newsList)).start();
+        }
+    }
+
+    private static void writeData(List<News> newsList) {
         try (RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(new HttpHost("localhost", 9200, "http")))) {
             for (News news : newsList) {
                 IndexRequest req = new IndexRequest("news");
