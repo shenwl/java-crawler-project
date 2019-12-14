@@ -95,7 +95,7 @@ public class Crawler extends Thread {
 
         linkTags.stream().map(linkTag -> linkTag.attr("href"))
                 .filter(Crawler::isSinaNewsLink)
-                .map(link -> parseLink(link))
+                .map(this::parseLink)
                 .forEach(links::add);
 
         return links;
